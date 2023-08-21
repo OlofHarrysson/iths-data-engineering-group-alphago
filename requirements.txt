@@ -1,0 +1,10 @@
+-e . # This installs our project "newsfeed" so we can do import newsfeed in our python code
+black
+isort
+pytest
+pandas
+pre-commit
+requests
+beautifulsoup4
+lxml
+pydantic==1.10.10
