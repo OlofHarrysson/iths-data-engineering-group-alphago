@@ -32,9 +32,6 @@ source venv/bin/activate
 
 ## Pull Request Practice
 
-🐰 The Adventures of Benny Bunny 🐰
-Once upon a time, in a lush meadow, lived Benny Bunny. One sunny day, Benny hopped through the tall grass and discovered a hidden carrot patch. Excitedly, he nibbled on the juiciest carrot he could find. But little did Benny know, the carrot patch belonged to Farmer Fred! Will Benny be able to outsmart the farmer and enjoy his delicious carrots? Join Benny Bunny on his thrilling adventure!
-
 🐻 Polly the Dancing Bear 🐻
 Deep in the enchanted forest, Polly the Bear loved to dance. She twirled and spun with grace, bringing joy to all the animals. One day, a grand dance competition was announced, and Polly knew she had to participate. But there was a problem – Polly didn't have a partner! Will she find the perfect dance partner and win the competition? Join Polly on her rhythmic adventure and discover the power of friendship.
 
