@@ -35,6 +35,3 @@ source venv/bin/activate
 🐻 Polly the Dancing Bear 🐻
 Deep in the enchanted forest, Polly the Bear loved to dance. She twirled and spun with grace, bringing joy to all the animals. One day, a grand dance competition was announced, and Polly knew she had to participate. But there was a problem – Polly didn't have a partner! Will she find the perfect dance partner and win the competition? Join Polly on her rhythmic adventure and discover the power of friendship.
 
-🐦 Oliver the Curious Owl 🐦
-In a cozy tree hollow, Oliver the Owl lived with his family. Oliver was known for his insatiable curiosity. One moonlit night, he spotted a shiny object in the distance. Eager to find out what it was, Oliver embarked on a thrilling nighttime quest. Will his curiosity lead him to a magical discovery or get him into trouble? Fly alongside Oliver and unravel the mysteries of the night.
-
