@@ -140,3 +140,7 @@ dmypy.json
 
 # macOS
 .DS_Store
+
+# johan emacs files
+\#*
+
