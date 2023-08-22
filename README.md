@@ -32,6 +32,4 @@ source venv/bin/activate
 
 ## Pull Request Practice
 
-🐻 Polly the Dancing Bear 🐻
-Deep in the enchanted forest, Polly the Bear loved to dance. She twirled and spun with grace, bringing joy to all the animals. One day, a grand dance competition was announced, and Polly knew she had to participate. But there was a problem – Polly didn't have a partner! Will she find the perfect dance partner and win the competition? Join Polly on her rhythmic adventure and discover the power of friendship.
 
