@@ -41,5 +41,3 @@ Deep in the enchanted forest, Polly the Bear loved to dance. She twirled and spu
 🐦 Oliver the Curious Owl 🐦
 In a cozy tree hollow, Oliver the Owl lived with his family. Oliver was known for his insatiable curiosity. One moonlit night, he spotted a shiny object in the distance. Eager to find out what it was, Oliver embarked on a thrilling nighttime quest. Will his curiosity lead him to a magical discovery or get him into trouble? Fly alongside Oliver and unravel the mysteries of the night.
 
-🐠 Sammy the Adventurous Fish 🐠
-In a vibrant coral reef, Sammy the Fish swam happily with his colorful friends. But Sammy dreamed of exploring the vast ocean beyond. One day, he gathered his courage and set off on an adventurous journey. Along the way, he encountered dangerous predators and mesmerizing underwater wonders. Will Sammy fulfill his dream and return safely to his friends in the coral reef? Dive into Sammy's daring escapade and discover the wonders of the deep sea.
