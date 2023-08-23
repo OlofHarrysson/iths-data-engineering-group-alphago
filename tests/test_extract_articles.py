@@ -1,3 +1,5 @@
 from newsfeed import extract_articles
 
-extract_articles.main("mit")
+
+def test_extract_articles():
+    extract_articles.main("mit")
