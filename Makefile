@@ -8,7 +8,7 @@ install_dependencies:
 run_precommit:
 	pre-commit run --all-files
 
-# by writing "make test" in the terminal all the tests in the directory "tests/" will run.
+# by writing "make run_test" in the terminal all the tests in the directory "tests/" will run.
 
 VENV_NAME = venv
 
@@ -17,5 +17,5 @@ activate:
 
 TEST_DIR = tests
 
-test: activate
+run_test: activate
 	pytest $(TEST_DIR)
