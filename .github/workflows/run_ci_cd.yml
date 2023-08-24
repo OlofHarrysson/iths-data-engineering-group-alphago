@@ -26,4 +26,6 @@ jobs:
 
     - name: Run pytest
       run: pytest tests/
-      
+
+    - name: Run pre-commit hooks
+      run: pre-commit run --all-files
