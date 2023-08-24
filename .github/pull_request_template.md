@@ -1,10 +1,13 @@
 ## Describe your changes
 ### Brief summary of the changes made:
 
+
 ### Reasons for the changes:
 
+
 ## Type of change:
-* New feature, bug fix, formating etc:
+### New feature, bug fix, formating etc:
+
 
 ## Any new dependencies? If yes, which one(s)?
 
