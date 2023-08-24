@@ -8,3 +8,6 @@ requests
 beautifulsoup4
 lxml
 pydantic==1.10.10
+langchain==0.0.271
+openai==0.27.9
+tiktoken==0.4.0
