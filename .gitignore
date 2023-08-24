@@ -143,4 +143,5 @@ dmypy.json
 
 # johan emacs files
 \#*
+*.org
 
