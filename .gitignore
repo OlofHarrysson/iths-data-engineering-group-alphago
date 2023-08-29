@@ -4,6 +4,7 @@ data/data_warehouse/*
 !data/data_lake/README.md
 !data/data_warehouse/README.md
 logs
+.vscode/*
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
