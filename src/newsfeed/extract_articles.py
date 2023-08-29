@@ -16,7 +16,7 @@ def create_uuid_from_string(title):
 
 def load_metadata(blog_name):
     metadata_path = Path("data/data_lake") / blog_name / "metadata.xml"
-    with open(metadata_path) as f:
+    with open(metadata_path, encoding="utf-8") as f:
         xml_text = f.read()
 
     parsed_xml = BeautifulSoup(xml_text, "xml")

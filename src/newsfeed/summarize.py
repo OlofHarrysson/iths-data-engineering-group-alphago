@@ -37,8 +37,8 @@ def summarize_text(blog_post):
     return summary
 
 
-def main(blog_post_index):
-    path_article_dir = Path("data/data_warehouse/mit/articles")
+def main(blog_post_index, blog_name):
+    path_article_dir = Path(f"data/data_warehouse/{blog_name}/articles")
     file_list = os.listdir(path_article_dir)
     summary = summarize_text(path_article_dir / file_list[blog_post_index])
     print(summary)
@@ -46,11 +46,13 @@ def main(blog_post_index):
 
 def parse_args():
     parser = argparse.ArgumentParser()
+    # add argument for which blog to summarize from, only accepted arguments are aws and mit
+    parser.add_argument("--blog", type=str, help="Name of blog to summarize article from")
     # add argument for index of article in file_list (arbitrary order)
-    parser.add_argument("--ix", type=int)
+    parser.add_argument("--ix", type=int, help="Index of article in file_list")
     return parser.parse_args()
 
 
 if __name__ == "__main__":
     args = parse_args()
-    main(blog_post_index=args.ix)
+    main(blog_post_index=args.ix, blog_name=args.blog)
