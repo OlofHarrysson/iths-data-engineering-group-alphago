@@ -46,8 +46,9 @@ def main(blog_post_index, blog_name):
 
 def parse_args():
     parser = argparse.ArgumentParser()
-    # add argument for index of article in file_list (arbitrary order)
+    # add argument for which blog to summarize from, only accepted arguments are aws and mit
     parser.add_argument("--blog", type=str, help="Name of blog to summarize article from")
+    # add argument for index of article in file_list (arbitrary order)
     parser.add_argument("--ix", type=int, help="Index of article in file_list")
     return parser.parse_args()
 
