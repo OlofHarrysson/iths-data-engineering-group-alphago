@@ -12,3 +12,8 @@ langchain==0.0.271
 openai==0.27.9
 tiktoken==0.4.0
 discord.py==2.3.2
+dash==2.13.0
+dash-bootstrap-components==1.4.2
+dash-core-components==2.0.0
+dash-html-components==2.0.0
+dash-table==5.0.0
