@@ -2,6 +2,7 @@ import argparse
 import os
 from pathlib import Path
 
+from download_blogs_from_rss import LINK_TO_XML_FILE
 from langchain.chains.combine_documents.stuff import StuffDocumentsChain
 from langchain.chains.llm import LLMChain
 from langchain.chat_models import ChatOpenAI
@@ -44,10 +45,18 @@ def main(blog_post_index, blog_name):
     print(summary)
 
 
+blog_names = list(LINK_TO_XML_FILE)
+
+
 def parse_args():
     parser = argparse.ArgumentParser()
     # add argument for which blog to summarize from, only accepted arguments are aws and mit
-    parser.add_argument("--blog", type=str, help="Name of blog to summarize article from")
+    parser.add_argument(
+        "--blog",
+        type=str,
+        help=f"Name of blog to summarize article from, allowed arguments are: {blog_names}",
+        choices=blog_names,
+    )
     # add argument for index of article in file_list (arbitrary order)
     parser.add_argument("--ix", type=int, help="Index of article in file_list")
     return parser.parse_args()
