@@ -3,6 +3,7 @@ import os
 import tempfile
 from pathlib import Path
 
+from download_blogs_from_rss import LINK_TO_XML_FILE
 from langchain.chains.combine_documents.stuff import StuffDocumentsChain
 from langchain.chains.llm import LLMChain
 from langchain.chat_models import ChatOpenAI
@@ -40,6 +41,7 @@ def summarize_text(blog_post_path):
     return summary
 
 
+
 # main takes the argument --source aws, or --source mit
 def main():
     args = parse_args()
@@ -63,6 +65,7 @@ def main():
         summary_text = summarize_text(current_article_path)
         print(f"Generated summary for {file_name}")
 
+
         blog_summary = BlogSummary(
             unique_id=f"summary_{file_name}",
             title=f"Summary of {Path(file_name).stem}",
@@ -75,20 +78,20 @@ def main():
             f.write(blog_summary.json())
         already_summerized.add(summary_filename)
 
-
+blog_names = list(LINK_TO_XML_FILE)
 # run python summarize.py --source mit OR aws
 def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--source",
         type=str,
-        choices=["mit", "aws"],
+        choices=blog_names,
         default="mit",
-        help="Blog source to summarize. Can be either 'mit' or 'aws",
+        help=f"Blog source to summarize, allowed arguments are: {blog_names}.",
     )
     return parser.parse_args()
 
 
 if __name__ == "__main__":
-    # args = parse_args()
     main()
+

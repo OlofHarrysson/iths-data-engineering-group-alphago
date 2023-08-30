@@ -21,13 +21,15 @@ async def anything(url, desc):
 def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument("--ix", type=int)
+    parser.add_argument("--blog", type=str)
     return parser.parse_args()
 
 
 if __name__ == "__main__":
+    blog_name = parse_args().blog
     # url = "https://discord.com/api/webhooks/1143948372546428928/3GiXGLSs3DfqjeMAXvBNPrx_Ywe8XEZR_diBqEuxNp_vMEHNW1_MaI5EphupAE0L04lr"
     url = "https://discord.com/api/webhooks/1131522847509069874/Lwk1yVc4w623xpRPkKYu9faFdMNvV5HTZ3TCcL5DgsIgeqhEvo9tBookvuh2S4IWysTt"
-    path_article_dir = Path("data/data_warehouse/mit/articles")
+    path_article_dir = Path(f"data/data_warehouse/{blog_name}/articles")
     file_list = os.listdir(path_article_dir)
     ix = parse_args().ix
     file_path = path_article_dir / file_list[ix]
