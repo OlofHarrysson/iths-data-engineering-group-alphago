@@ -1,5 +1,6 @@
 import argparse
 import os
+import tempfile
 from pathlib import Path
 
 from download_blogs_from_rss import LINK_TO_XML_FILE
@@ -9,10 +10,12 @@ from langchain.chat_models import ChatOpenAI
 from langchain.document_loaders import TextLoader
 from langchain.prompts import PromptTemplate
 
+from newsfeed.datatypes import BlogInfo, BlogSummary
 
-def summarize_text(blog_post):
+
+def summarize_text(blog_post_path):
     # loading text as langchain document
-    loader = TextLoader(blog_post)
+    loader = TextLoader(blog_post_path)
     blog_post = loader.load()
 
     # define prompt
@@ -38,30 +41,57 @@ def summarize_text(blog_post):
     return summary
 
 
-def main(blog_post_index, blog_name):
-    path_article_dir = Path(f"data/data_warehouse/{blog_name}/articles")
-    file_list = os.listdir(path_article_dir)
-    summary = summarize_text(path_article_dir / file_list[blog_post_index])
-    print(summary)
 
+# main takes the argument --source aws, or --source mit
+def main():
+    args = parse_args()
+    source = args.source
+    path_article_dir = Path(f"data/data_warehouse/{source}/articles")
+    path_summary_dir = Path(f"data/data_warehouse/{source}/summerized_articles")
+    path_summary_dir.mkdir(parents=True, exist_ok=True)
+
+    already_summerized = set(os.listdir(path_summary_dir))
+
+    file_list = os.listdir(path_article_dir)
+
+    for file_name in file_list:
+        summary_filename_check = f"Summary_of_{file_name}"
+
+        if summary_filename_check in already_summerized:
+            print(f"Skipping already summerized article: {file_name}")
+            continue
+        # file path for the article that's being summerized/looked at
+        current_article_path = path_article_dir / file_name
+        summary_text = summarize_text(current_article_path)
+        print(f"Generated summary for {file_name}")
+
+
+        blog_summary = BlogSummary(
+            unique_id=f"summary_{file_name}",
+            title=f"Summary of {Path(file_name).stem}",
+            text=summary_text,
+        )
+        # gets the name of the article
+        summary_filename = blog_summary.get_filename()
+
+        with open(path_summary_dir / summary_filename, "w") as f:
+            f.write(blog_summary.json())
+        already_summerized.add(summary_filename)
 
 blog_names = list(LINK_TO_XML_FILE)
-
-
+# run python summarize.py --source mit OR aws
 def parse_args():
     parser = argparse.ArgumentParser()
-    # add argument for which blog to summarize from, only accepted arguments are aws and mit
     parser.add_argument(
-        "--blog",
+        "--source",
         type=str,
-        help=f"Name of blog to summarize article from, allowed arguments are: {blog_names}",
         choices=blog_names,
+        default="mit",
+        help=f"Blog source to summarize, allowed arguments are: {blog_names}.",
     )
-    # add argument for index of article in file_list (arbitrary order)
-    parser.add_argument("--ix", type=int, help="Index of article in file_list")
     return parser.parse_args()
 
 
 if __name__ == "__main__":
-    args = parse_args()
-    main(blog_post_index=args.ix, blog_name=args.blog)
+    main()
+
