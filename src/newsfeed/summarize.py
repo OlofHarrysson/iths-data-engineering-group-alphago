@@ -44,8 +44,8 @@ def summarize_text(blog_post_path):
 def main():
     args = parse_args()
     source = args.source
-    path_article_dir = Path("data/data_warehouse/{source}/articles")
-    path_summary_dir = Path("data/data_warehouse/{source}/summerized_articles")
+    path_article_dir = Path(f"data/data_warehouse/{source}/articles")
+    path_summary_dir = Path(f"data/data_warehouse/{source}/summerized_articles")
     path_summary_dir.mkdir(parents=True, exist_ok=True)
 
     already_summerized = set(os.listdir(path_summary_dir))
@@ -54,7 +54,6 @@ def main():
 
     for file_name in file_list:
         summary_filename_check = f"Summary_of_{file_name}"
-        print(summary_filename_check)
 
         if summary_filename_check in already_summerized:
             print(f"Skipping already summerized article: {file_name}")
