@@ -16,8 +16,6 @@ class BlogInfo(pydantic.BaseModel):
 
     def get_filename(self):
         filename = f'{self.title.replace(" ", "_")}.json'
-        #  if filename.endswith(".json.json"):
-        #     filename = filename.replace()
         return filename
 
 
