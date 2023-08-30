@@ -40,9 +40,12 @@ def summarize_text(blog_post_path):
     return summary
 
 
+# main takes the argument --source aws, or --source mit
 def main():
-    path_article_dir = Path("data/data_warehouse/mit/articles")
-    path_summary_dir = Path("data/data_warehouse/mit/summerized_articles")
+    args = parse_args()
+    source = args.source
+    path_article_dir = Path("data/data_warehouse/{source}/articles")
+    path_summary_dir = Path("data/data_warehouse/{source}/summerized_articles")
     path_summary_dir.mkdir(parents=True, exist_ok=True)
 
     already_summerized = set(os.listdir(path_summary_dir))
@@ -60,6 +63,7 @@ def main():
         current_article_path = path_article_dir / file_name
         summary_text = summarize_text(current_article_path)
         print(f"Generated summary for {file_name}")
+
         blog_summary = BlogSummary(
             unique_id=f"summary_{file_name}",
             title=f"Summary of {Path(file_name).stem}",
@@ -72,44 +76,18 @@ def main():
             f.write(blog_summary.json())
         already_summerized.add(summary_filename)
 
-        # Ignore this for now, will remove soon.
-        # Wanted to keep this to learn from.
-        """  with open(path_article_dir / file_name, "r") as f:
-            blog_post = f.read()
 
-        with tempfile.NamedTemporaryFile(delete=False, mode="w+") as temp:
-            temp.write(blog_post["blog_text"])
-            current_article_path = temp.name
-
-        try:
-            summary_text = summarize_text(current_article_path)
-            print(f"Generated summary for {file_name}")
-
-            blog_summary = BlogSummary(
-                unique_id=f"summary_{file_name}",
-                title=f"Summary of {file_name}",
-                text=summary_text,
-            )
-            summary_filename = blog_summary.get_filename()
-
-            with open(path_summary_dir / summary_filename, "w") as f:
-                f.write(blog_summary.json())
-            already_summerized.add(summary_filename)
-        finally:
-            print(f"Failed to summerize text, {current_article_path}")
-            os.remove(current_article_path)
-        """
-
-
-# summary = summarize_text(path_article_dir / file_list[blog_post_index])
-# print(summary)
-
-
-# def parse_args():
-#    parser = argparse.ArgumentParser()
-# add argument for index of article in file_list (arbitrary order)
-#    parser.add_argument("--ix", type=int)
-#   return parser.parse_args()
+# run python summarize.py --source mit OR aws
+def parse_args():
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--source",
+        type=str,
+        choices=["mit", "aws"],
+        default="mit",
+        help="Blog source to summarize. Can be either 'mit' or 'aws",
+    )
+    return parser.parse_args()
 
 
 if __name__ == "__main__":
