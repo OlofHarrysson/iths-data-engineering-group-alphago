@@ -77,7 +77,6 @@ def main():
         already_summarized.add(summary_filename)
 
 
-
 blog_names = list(LINK_TO_XML_FILE)
 
 
@@ -96,3 +95,4 @@ def parse_args():
 
 if __name__ == "__main__":
     main()
+
