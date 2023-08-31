@@ -3,7 +3,6 @@ import os
 import tempfile
 from pathlib import Path
 
-from download_blogs_from_rss import LINK_TO_XML_FILE
 from langchain.chains.combine_documents.stuff import StuffDocumentsChain
 from langchain.chains.llm import LLMChain
 from langchain.chat_models import ChatOpenAI
@@ -11,6 +10,7 @@ from langchain.document_loaders import TextLoader
 from langchain.prompts import PromptTemplate
 
 from newsfeed.datatypes import BlogInfo, BlogSummary
+from newsfeed.download_blogs_from_rss import LINK_TO_XML_FILE
 
 
 def summarize_text(blog_post_path):
