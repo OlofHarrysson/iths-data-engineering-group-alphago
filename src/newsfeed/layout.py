@@ -16,7 +16,12 @@ class Layout:
                 dbc.Row(
                     className="mt-4",
                     children=[
-                        dbc.Col(dcc.Markdown(id="blog-post")),
+                        dbc.Col(
+                            children=[
+                                dbc.Row(dcc.Markdown(id="blog-post")),
+                                dbc.Row(dcc.Markdown(id="link-to-blog-post")),
+                            ]
+                        ),
                         dbc.Col(
                             children=[
                                 dbc.Row(html.P("Choose type of summary:"), className="mt-1"),
@@ -42,6 +47,8 @@ class Layout:
                                     dcc.Dropdown(
                                         id="blog-articles-dropdown",
                                         options=[],
+                                        style={"width": "100&", "font-size": "1em"},
+                                        searchable=True,
                                     )
                                 ),
                             ]

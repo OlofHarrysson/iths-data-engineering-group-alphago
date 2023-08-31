@@ -26,7 +26,7 @@ def summarize_text(blog_post_path):
 
     # define what LLM to use
     # using OpenAI chat LLM API requires env variable OPEN_AI_KEY to be set with API key
-    llm = ChatOpenAI(temperature=0, model_name="gpt-3.5-turbo")
+    llm = ChatOpenAI(temperature=0, model_name="gpt-3.5-turbo-16k")
 
     # create a "chain" object for running queries against a specified LLM, with customizable prompt
     llm_chain = LLMChain(llm=llm, prompt=prompt)
