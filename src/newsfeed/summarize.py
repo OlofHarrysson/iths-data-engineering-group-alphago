@@ -26,7 +26,7 @@ def summarize_text(blog_post_path):
 
     # define what LLM to use
     # using OpenAI chat LLM API requires env variable OPEN_AI_KEY to be set with API key
-    llm = ChatOpenAI(temperature=0, model_name="gpt-3.5-turbo")
+    llm = ChatOpenAI(temperature=0, model_name="gpt-3.5-turbo-16k")
 
     # create a "chain" object for running queries against a specified LLM, with customizable prompt
     llm_chain = LLMChain(llm=llm, prompt=prompt)
@@ -39,7 +39,6 @@ def summarize_text(blog_post_path):
     summary = stuff_chain.run(blog_post)
 
     return summary
-
 
 
 # main takes the argument --source aws, or --source mit
@@ -65,7 +64,6 @@ def main():
         summary_text = summarize_text(current_article_path)
         print(f"Generated summary for {file_name}")
 
-
         blog_summary = BlogSummary(
             unique_id=f"summary_{file_name}",
             title=f"Summary of {Path(file_name).stem}",
@@ -78,7 +76,10 @@ def main():
             f.write(blog_summary.json())
         already_summerized.add(summary_filename)
 
+
 blog_names = list(LINK_TO_XML_FILE)
+
+
 # run python summarize.py --source mit OR aws
 def parse_args():
     parser = argparse.ArgumentParser()
@@ -94,4 +95,3 @@ def parse_args():
 
 if __name__ == "__main__":
     main()
-

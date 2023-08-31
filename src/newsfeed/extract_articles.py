@@ -1,4 +1,5 @@
 import argparse
+import re
 import uuid
 from datetime import datetime
 from pathlib import Path
@@ -21,6 +22,13 @@ def load_metadata(blog_name):
 
     parsed_xml = BeautifulSoup(xml_text, "xml")
     return parsed_xml
+
+
+# removes invalid characters in filename, "/", ">" etc
+def sanitize_filename(filename):
+    valid_filename = re.sub(r'[<>:"/\\|?*]', "", filename)
+    # truncates cleaned-up filename to ensure it's not too long
+    return valid_filename[:250]
 
 
 def extract_articles_from_xml(parsed_xml):
@@ -49,7 +57,9 @@ def save_articles(articles, blog_name):
     save_dir = Path("data/data_warehouse", blog_name, "articles")
     save_dir.mkdir(exist_ok=True, parents=True)
     for article in articles:
-        save_path = save_dir / article.get_filename()
+        sanitized_filename = sanitize_filename(article.get_filename())
+        save_path = save_dir / sanitized_filename
+        print(f"Saving article to {save_path}")  # Debug line
         with open(save_path, "w") as f:
             f.write(article.json(indent=2))
 
