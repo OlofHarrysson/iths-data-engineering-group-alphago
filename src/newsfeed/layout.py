@@ -6,7 +6,7 @@ from dash import dcc, html
 
 class Layout:
     def __init__(self):
-        self._blog_options = {"mit": "MIT"}
+        self._blog_options = {"mit": "MIT", "aws": "AWS"}
         self._prompt_options = {"tech": "Technical", "nontech": "Non-technical"}
 
     def layout(self):

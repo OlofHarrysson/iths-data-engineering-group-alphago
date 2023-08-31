@@ -3,7 +3,6 @@ import os
 import tempfile
 from pathlib import Path
 
-from download_blogs_from_rss import LINK_TO_XML_FILE
 from langchain.chains.combine_documents.stuff import StuffDocumentsChain
 from langchain.chains.llm import LLMChain
 from langchain.chat_models import ChatOpenAI
@@ -11,6 +10,7 @@ from langchain.document_loaders import TextLoader
 from langchain.prompts import PromptTemplate
 
 from newsfeed.datatypes import BlogInfo, BlogSummary
+from newsfeed.download_blogs_from_rss import LINK_TO_XML_FILE
 
 
 def summarize_text(blog_post_path):
@@ -46,20 +46,20 @@ def main():
     args = parse_args()
     source = args.source
     path_article_dir = Path(f"data/data_warehouse/{source}/articles")
-    path_summary_dir = Path(f"data/data_warehouse/{source}/summerized_articles")
+    path_summary_dir = Path(f"data/data_warehouse/{source}/summarized_articles")
     path_summary_dir.mkdir(parents=True, exist_ok=True)
 
-    already_summerized = set(os.listdir(path_summary_dir))
+    already_summarized = set(os.listdir(path_summary_dir))
 
     file_list = os.listdir(path_article_dir)
 
     for file_name in file_list:
         summary_filename_check = f"Summary_of_{file_name}"
 
-        if summary_filename_check in already_summerized:
-            print(f"Skipping already summerized article: {file_name}")
+        if summary_filename_check in already_summarized:
+            print(f"Skipping already summarized article: {file_name}")
             continue
-        # file path for the article that's being summerized/looked at
+        # file path for the article that's being summarized/looked at
         current_article_path = path_article_dir / file_name
         summary_text = summarize_text(current_article_path)
         print(f"Generated summary for {file_name}")
@@ -74,7 +74,8 @@ def main():
 
         with open(path_summary_dir / summary_filename, "w") as f:
             f.write(blog_summary.json())
-        already_summerized.add(summary_filename)
+        already_summarized.add(summary_filename)
+
 
 
 blog_names = list(LINK_TO_XML_FILE)

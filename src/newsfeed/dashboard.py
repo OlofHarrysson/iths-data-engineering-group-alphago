@@ -1,3 +1,4 @@
+import json
 import os
 from pathlib import Path
 
@@ -36,13 +37,29 @@ def get_article(blog):
     Input("blog-radio", "value"),
     Input("blog-articles-dropdown", "value"),
 )
-# def summarize_article(ix, blog):
 def summarize_article(blog, article):
-    if article:
-        path_article_dir = Path(f"data/data_warehouse/{blog}/articles")
-        file_list = os.listdir(path_article_dir)
-        file_path = path_article_dir / article
-        return summarize.summarize_text(file_path)
+    if not article:
+        return "No article specified."
+
+    path_article_dir = Path(f"data/data_warehouse/{blog}/summarized_articles")
+
+    # Check if directory exists
+    if not path_article_dir.exists():
+        return f"Directory {path_article_dir} does not exist."
+
+    filename_summary = "Summary_of_" + article
+    file_path = path_article_dir / filename_summary
+
+    # Check if file exists
+    if not file_path.exists():
+        return f"File {file_path} does not exist."
+
+    try:
+        with open(str(file_path), "r") as f:  # Convert Path to str for compatibility
+            data = json.load(f)
+            return data.get("text", "Key 'text' not found in JSON file.")
+    except json.JSONDecodeError:
+        return "Error decoding JSON."
 
 
 if __name__ == "__main__":
