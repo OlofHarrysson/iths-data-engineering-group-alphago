@@ -41,7 +41,6 @@ def summarize_text(blog_post_path):
     return summary
 
 
-
 # main takes the argument --source aws, or --source mit
 def main():
     args = parse_args()
@@ -65,7 +64,6 @@ def main():
         summary_text = summarize_text(current_article_path)
         print(f"Generated summary for {file_name}")
 
-
         blog_summary = BlogSummary(
             unique_id=f"summary_{file_name}",
             title=f"Summary of {Path(file_name).stem}",
@@ -78,7 +76,10 @@ def main():
             f.write(blog_summary.json())
         already_summerized.add(summary_filename)
 
+
 blog_names = list(LINK_TO_XML_FILE)
+
+
 # run python summarize.py --source mit OR aws
 def parse_args():
     parser = argparse.ArgumentParser()
@@ -94,4 +95,3 @@ def parse_args():
 
 if __name__ == "__main__":
     main()
-
