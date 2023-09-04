@@ -97,9 +97,9 @@ model_gpt = GPT2LMHeadModel.from_pretrained(checkpoint_gpt)
 model_gpt_out = model_gpt.generate(
     **encoded_input_gpt,
     max_new_tokens=(1024 - len(tokens_gpt)),
-    do_sample=True,  # sample-baed generation mode needed for temperature to have effect?
-    temperature=1.5,  # higher value -> more output randomness
-    # temperature=0.1,  # higher value -> more output randomness
+    do_sample=True,  # samples from the output distribution instead of using argmax (needed for temperature to have an effect)
+    temperature=1.5,  # higher value softens output distribution (reducing confidence in predictions, adding more randomness)
+    # temperature=0.1,
     repetition_penalty=1.4,  # values over 1.0 decrease likelihood of repeating the same tokens
     early_stopping=False,  # stop when predicing end of sequence?
 )
