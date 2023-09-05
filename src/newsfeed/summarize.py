@@ -82,7 +82,7 @@ def summarize_text(blog_post_path, local_model=None, sum_type="tech"):
 
     else:
         raise NotImplementedError(
-            f"Local model {local_model} not implemented, please choose between gpt2 and t5"
+            f"Local model {local_model} not implemented. Please choose between 'gpt2' and 't5'"
         )
 
     return summary
@@ -97,9 +97,13 @@ def select_prompt(sum_type):
         prompt_template = """Write a very simple summary, suitable for children, of the following:
         "{text}"
         SIMPLE SUMMARY:"""
+    elif sum_type == "swe":
+        prompt_template = """Skriv en sammanfattning på svenska av följande text:
+        "{text}"
+        Sammanfattning:"""
     else:
         raise NotImplementedError(
-            f"Summarization type {sum_type} not implemented, plase choose tech or ntech"
+            f"Summarization type {sum_type} not implemented. Please choose 'tech', 'ntech', or 'swe'"
         )
 
     prompt = PromptTemplate.from_template(prompt_template)
@@ -169,9 +173,9 @@ def parse_args():
     parser.add_argument(
         "--stype",
         type=str,
-        choices=["tech", "ntech"],
+        choices=["tech", "ntech", "swe"],
         default="tech",
-        help=f"What type of summarization do you want (techincal 'tech', or non-technical 'ntech')",
+        help=f"What type of summarization do you want (techincal 'tech', non-technical 'ntech', or swedish 'swe')",
     )
     return parser.parse_args()
 
