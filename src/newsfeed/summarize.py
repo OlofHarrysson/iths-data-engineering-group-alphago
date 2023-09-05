@@ -50,7 +50,7 @@ def summarize_text(blog_post_path, local_model=None):
         checkpoint = "distilgpt2"
         tokenizer = AutoTokenizer.from_pretrained(checkpoint)  # this selects GPT2TokenizerFast
 
-        # max tokens length is 1024
+        # max token length is 1024
         # limit input tokens to allow enough space for generation
         tokens_text = tokenizer.tokenize(blog_post_text)
         tokens_tldr = tokenizer.tokenize("\n\nTL;DR:\n")
