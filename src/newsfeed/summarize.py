@@ -86,6 +86,24 @@ def summarize_text(blog_post_path, local_model=None):
     return summary
 
 
+def select_prompt(sum_type):
+    if sum_type == "tech":
+        prompt_template = """Write a concise summary for an AI researcher of the following:
+        "{text}"
+        CONCISE SUMMARY:"""
+    elif sum_type == "ntech":
+        prompt_template = """Write a very simple summary, suitable for children, of the following:
+        "{text}"
+        SIMPLE SUMMARY:"""
+    else:
+        raise NotImplementedError(
+            f"Summarization type {sum_type} not implemented, plase choose tech or ntech"
+        )
+
+    prompt = PromptTemplate.from_template(prompt_template)
+    return prompt
+
+
 # main takes the argument --source aws, or --source mit
 def main(source, local_model=None):
     path_article_dir = Path(f"data/data_warehouse/{source}/articles")
