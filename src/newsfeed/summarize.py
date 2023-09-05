@@ -15,38 +15,15 @@ from newsfeed.datatypes import BlogInfo, BlogSummary
 from newsfeed.download_blogs_from_rss import LINK_TO_XML_FILE
 
 
-def summarize_text(blog_post_path, local_model=None):
+def summarize_text(blog_post_path, local_model=None, sum_type="tech"):
     # loading text as langchain document
     loader = TextLoader(blog_post_path)
     blog_post = loader.load()
 
-    # just text for local models
-    blog_post_text = json.loads(blog_post[0].page_content)["blog_text"]
+    if local_model == "gpt2":
+        # just text for local models
+        blog_post_text = json.loads(blog_post[0].page_content)["blog_text"]
 
-    if not local_model:
-        # define prompt
-        prompt_template = """Write a concise summary of the following:
-        "{text}"
-        CONCISE SUMMARY:"""
-        prompt = PromptTemplate.from_template(prompt_template)
-
-        # define what LLM to use
-        # using OpenAI chat LLM API requires env variable OPEN_AI_KEY to be set with API key
-        llm = ChatOpenAI(temperature=0, model_name="gpt-3.5-turbo-16k")
-
-        # create a "chain" object for running queries against a specified LLM, with customizable prompt
-        llm_chain = LLMChain(llm=llm, prompt=prompt)
-
-        # send document to the llm_chain
-        # StuffDocumentsChain "stuffs" list of documents + prompt into single call
-        # MapReduceChain splits it into several combines and then combines output
-        # document_variable_name can be used to customize where in the prompt the documents are inserted?
-        stuff_chain = StuffDocumentsChain(llm_chain=llm_chain, document_variable_name="text")
-        summary = stuff_chain.run(blog_post)
-
-        return summary
-
-    elif local_model == "gpt2":
         checkpoint = "distilgpt2"
         tokenizer = AutoTokenizer.from_pretrained(checkpoint)  # this selects GPT2TokenizerFast
 
@@ -70,6 +47,9 @@ def summarize_text(blog_post_path, local_model=None):
         summary = pipe_out[0]["generated_text"][len(query) :]
 
     elif local_model == "t5":
+        # just text for local models
+        blog_post_text = json.loads(blog_post[0].page_content)["blog_text"]
+
         checkpoint = "t5-small"
         tokenizer = AutoTokenizer.from_pretrained(checkpoint)  # T5TokenizerFast
 
@@ -83,16 +63,58 @@ def summarize_text(blog_post_path, local_model=None):
         pipe_out = pipe(query, max_length=257)
         summary = pipe_out[0]["summary_text"]
 
+    elif local_model == None:
+        prompt = select_prompt(sum_type)
+
+        # define what LLM to use
+        # using OpenAI chat LLM API requires env variable OPEN_AI_KEY to be set with API key
+        llm = ChatOpenAI(temperature=0, model_name="gpt-3.5-turbo-16k")
+
+        # create a "chain" object for running queries against a specified LLM, with customizable prompt
+        llm_chain = LLMChain(llm=llm, prompt=prompt)
+
+        # send document to the llm_chain
+        # StuffDocumentsChain "stuffs" list of documents + prompt into single call
+        # MapReduceChain splits it into several combines and then combines output
+        # document_variable_name can be used to customize where in the prompt the documents are inserted?
+        stuff_chain = StuffDocumentsChain(llm_chain=llm_chain, document_variable_name="text")
+        summary = stuff_chain.run(blog_post)
+
+    else:
+        raise NotImplementedError(
+            f"Local model {local_model} not implemented, please choose between gpt2 and t5"
+        )
+
     return summary
 
 
+def select_prompt(sum_type):
+    if sum_type == "tech":
+        prompt_template = """Write a concise summary for an AI researcher of the following:
+        "{text}"
+        CONCISE SUMMARY:"""
+    elif sum_type == "ntech":
+        prompt_template = """Write a very simple summary, suitable for children, of the following:
+        "{text}"
+        SIMPLE SUMMARY:"""
+    else:
+        raise NotImplementedError(
+            f"Summarization type {sum_type} not implemented, plase choose tech or ntech"
+        )
+
+    prompt = PromptTemplate.from_template(prompt_template)
+    return prompt
+
+
 # main takes the argument --source aws, or --source mit
-def main(source, local_model=None):
+def main(source, local_model=None, sum_type="tech"):
     path_article_dir = Path(f"data/data_warehouse/{source}/articles")
     path_summary_dir = Path(f"data/data_warehouse/{source}/summarized_articles")
 
     if local_model:
         path_summary_dir = path_summary_dir / local_model
+    else:
+        path_summary_dir = path_summary_dir / sum_type
 
     path_summary_dir.mkdir(parents=True, exist_ok=True)
 
@@ -108,7 +130,7 @@ def main(source, local_model=None):
             continue
         # file path for the article that's being summarized/looked at
         current_article_path = path_article_dir / file_name
-        summary_text = summarize_text(current_article_path, local_model)
+        summary_text = summarize_text(current_article_path, local_model, sum_type)
         print(f"Generated summary for {file_name}")
 
         blog_summary = BlogSummary(
@@ -138,15 +160,22 @@ def parse_args():
         help=f"Blog source to summarize, allowed arguments are: {blog_names}.",
     )
     parser.add_argument(
-        "--local_model",
+        "--model",
         type=str,
         choices=["t5", "gpt2"],
         # default="",
         help=f"Use local model for summarization",
+    )
+    parser.add_argument(
+        "--stype",
+        type=str,
+        choices=["tech", "ntech"],
+        default="tech",
+        help=f"What type of summarization do you want (techincal 'tech', or non-technical 'ntech')",
     )
     return parser.parse_args()
 
 
 if __name__ == "__main__":
     args = parse_args()
-    main(source=args.source, local_model=args.local_model)
+    main(source=args.source, local_model=args.model, sum_type=args.stype)
