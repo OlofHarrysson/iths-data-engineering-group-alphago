@@ -173,7 +173,7 @@ def parse_args():
     parser.add_argument(
         "--stype",
         type=str,
-        choices=["tech", "ntech"],
+        choices=["tech", "ntech", "swe"],
         default="tech",
         help=f"What type of summarization do you want (techincal 'tech', non-technical 'ntech', or swedish 'swe')",
     )
