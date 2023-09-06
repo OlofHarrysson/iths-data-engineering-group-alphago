@@ -1,4 +1,5 @@
 import argparse
+import shlex  # needed for airflow DAG
 from pathlib import Path
 
 import requests
@@ -37,6 +38,14 @@ def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument("--blog_name", type=str)
     return parser.parse_args()
+
+
+# somehow it works.
+def airflow_dag_argument(arg_str):
+    args = shlex.split(arg_str)
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--blog_name")
+    parsed_args = parser.parse_args(args)
 
 
 if __name__ == "__main__":

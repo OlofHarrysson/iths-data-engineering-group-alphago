@@ -78,7 +78,7 @@ x-airflow-common: &airflow-common
     # WARNING: Use _PIP_ADDITIONAL_REQUIREMENTS option ONLY for a quick checks
     # for other purpose (development, test and especially production usage) build/extend Airflow image.
     _PIP_ADDITIONAL_REQUIREMENTS: ${_PIP_ADDITIONAL_REQUIREMENTS:-}
-    PYTHONPATH: "${PYTHONPATH:-}${PYTHONPATH:+:}/mnt/package-code" # Changed
+    PYTHONPATH: "${PYTHONPATH:-}${PYTHONPATH:+:}/mnt/package-code/" # Changed
   volumes:
   - ${AIRFLOW_PROJ_DIR:-.}/dags:/opt/airflow/dags
   - ${AIRFLOW_PROJ_DIR:-.}/logs:/opt/airflow/logs
@@ -98,6 +98,9 @@ services:
     - postgres.env
     volumes:
     - postgres-db-volume:/var/lib/postgresql/data
+    #test with volume to get the hello.txt in vscode
+    #- ./airflow_tests:/airflow/airflow_tests
+    #- ./dags:/opt/airflow/dags
     healthcheck:
       test: ["CMD", "pg_isready", "-U", "airflow"]
       interval: 10s
@@ -112,6 +115,9 @@ services:
     command: webserver
     ports:
     - "8080:8080"
+    #test with volume to get the hello.txt in vscode
+    #volumes:
+    #  - ./airflow_tests:/airflow/airflow_tests
     healthcheck:
       test: ["CMD", "curl", "--fail", "http://localhost:8080/health"]
       interval: 30s
@@ -128,6 +134,9 @@ services:
     <<: *airflow-common
     command: scheduler
     container_name: scheduler
+    #test with volume to get the hello.txt in vscode
+    #volumes:
+    #  - ./airflow_tests:/airflow/airflow_tests
     healthcheck:
       test: ["CMD", "curl", "--fail", "http://localhost:8974/health"]
       interval: 30s
