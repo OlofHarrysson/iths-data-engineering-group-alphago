@@ -19,7 +19,7 @@ async def send_webhook(url, desc):
         await webhook.send(embed=embed, username="SummaryBot")
 
 
-def send_to_webhook(info, summary):
+def send_to_webhook(info, summary, sum_type):
     desc = f"""**Group Name**: alphago
 
     **Blog Title**: {info['title']}
@@ -30,8 +30,13 @@ def send_to_webhook(info, summary):
     **Additional information**: {info["link"]}
     """
 
-    url = "https://discord.com/api/webhooks/1143948372546428928/3GiXGLSs3DfqjeMAXvBNPrx_Ywe8XEZR_diBqEuxNp_vMEHNW1_MaI5EphupAE0L04lr"
-    # url = "https://discord.com/api/webhooks/1131522847509069874/Lwk1yVc4w623xpRPkKYu9faFdMNvV5HTZ3TCcL5DgsIgeqhEvo9tBookvuh2S4IWysTt"
+    url_dict = {
+        "tech": "https://discord.com/api/webhooks/1143948372546428928/3GiXGLSs3DfqjeMAXvBNPrx_Ywe8XEZR_diBqEuxNp_vMEHNW1_MaI5EphupAE0L04lr",
+        "ntech": "https://discord.com/api/webhooks/1148897197706981419/V5u8mBP0gFzeTjfWLMPdkqwATaip_3FewbYEII93tYA_yTW6MAj05t-Q9qqHHvPWuwHL",
+        "swe": "https://discord.com/api/webhooks/1148897850126782565/B1Wqpcw8vXWP5oppsorb9aoqStDgOibuNfssKRB7sjyg5QzLjmI72xI10KqNCmsW_u8J",
+    }
+
+    url = url_dict[sum_type]
 
     loop = asyncio.new_event_loop()
     loop.run_until_complete(send_webhook(url, desc))
@@ -73,7 +78,7 @@ def main(source, ix=None, local_model=None, sum_type="tech"):
     with open(path_article_dir / article, "r") as json_file:
         article_info = json.load(json_file)
 
-    send_to_webhook(article_info, summary)
+    send_to_webhook(article_info, summary, sum_type)
 
 
 blog_names = list(LINK_TO_XML_FILE)
