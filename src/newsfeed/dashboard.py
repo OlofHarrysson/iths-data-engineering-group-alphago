@@ -7,7 +7,7 @@ import dash_bootstrap_components as dbc
 from dash import dcc, html
 from dash.dependencies import Input, Output
 
-from newsfeed import layout, summarize
+from newsfeed import dashboard_layout, summarize
 
 app = dash.Dash(
     __name__,
@@ -17,7 +17,7 @@ app = dash.Dash(
     # suppress_callback_exceptions=True
 )
 
-app.layout = layout.Layout().layout()
+app.layout = dashboard_layout.LayoutHandler().create_layout()
 
 # server = app.server
 

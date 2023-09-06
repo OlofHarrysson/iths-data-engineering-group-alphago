@@ -4,12 +4,12 @@ import dash_bootstrap_components as dbc
 from dash import dcc, html
 
 
-class Layout:
+class LayoutHandler:
     def __init__(self):
         self._blog_options = {"mit": "MIT", "aws": "AWS"}
         self._prompt_options = {"tech": "Technical", "nontech": "Non-technical"}
 
-    def layout(self):
+    def create_layout(self):
         return dbc.Container(
             [
                 dbc.Card(dbc.CardBody(html.H1("Blog post summary"))),
