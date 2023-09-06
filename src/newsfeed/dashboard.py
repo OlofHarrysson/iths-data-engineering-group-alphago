@@ -21,11 +21,6 @@ app.layout = dashboard_layout.LayoutHandler().create_layout()
 
 # server = app.server
 
-path_article_dir = Path(f"data/data_warehouse/{blog}/articles")
-file_list = os.listdir(path_article_dir)
-
-file_path = path_article_dir / file_list[0]
-
 
 @app.callback(
     Output("blog-articles-dropdown", "options"),
@@ -42,7 +37,8 @@ def get_article(blog):
             with open(file_path, "r") as f:
                 data = json.load(f)
                 published = data.get("published", "Key 'published' not found in JSON file")
-                articles.append((file_name, published))
+                title = data.get("title", "Key 'title' not found in JSON file")
+                articles.append((title, published))
         except json.JSONDecodeError:
             return "Error decoding JSON"
 
@@ -57,30 +53,33 @@ def get_article(blog):
     Output("link-to-blog-post", "children"),
     Input("blog-radio", "value"),
     Input("blog-articles-dropdown", "value"),
+    Input("prompt-radio", "value"),
+    Input("model-radio", "value"),
 )
-def summarize_article(blog, article):
+def summarize_article(blog, article, sum_type, model):
     if not article:
-        return "No article specified."
+        return "No article specified.", ""
 
-    path_summary_dir = Path(f"data/data_warehouse/{blog}/summarized_articles")
+    article = f'{article.replace(" ", "_")}.json'  # get file name from title
 
-    # Check if directory exists
-    if not path_summary_dir.exists():
-        return f"Directory {path_summary_dir} does not exist."
+    if model == "api":
+        path_summary_dir = Path(f"data/data_warehouse/{blog}/summarized_articles/{sum_type}")
+    else:
+        path_summary_dir = Path(f"data/data_warehouse/{blog}/summarized_articles/{model}")
 
     filename_summary = "Summary_of_" + article
     path_summary_file = path_summary_dir / filename_summary
 
     # Check if file exists
     if not path_summary_file.exists():
-        return f"File {path_summary_file} does not exist."
+        return f"File {path_summary_file} does not exist.", ""
 
     try:
         with open(str(path_summary_file), "r") as f:  # Convert Path to str for compatibility
             data = json.load(f)
             summary_content = data.get("text", "Key 'text' not found in JSON file.")
     except json.JSONDecodeError:
-        return "Error decoding JSON."
+        return "Error decoding JSON.", ""
 
     path_article_dir = Path(f"data/data_warehouse/{blog}/articles")
     path_article_file = path_article_dir / article
@@ -88,9 +87,11 @@ def summarize_article(blog, article):
     try:
         with open(str(path_article_file), "r") as f:
             data = json.load(f)
-            link_to_article = "Read more: " + data.get("link", "Key 'link' not found in JSON file")
+            link_to_article = "\nRead more: " + data.get(
+                "link", "Key 'link' not found in JSON file"
+            )
     except json.JSONDecodeError:
-        return "Error decoding JSON", None
+        return "Error decoding JSON", ""
 
     return summary_content, link_to_article
 

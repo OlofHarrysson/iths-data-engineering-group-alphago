@@ -7,7 +7,8 @@ from dash import dcc, html
 class LayoutHandler:
     def __init__(self):
         self._blog_options = {"mit": "MIT", "aws": "AWS"}
-        self._prompt_options = {"tech": "Technical", "nontech": "Non-technical"}
+        self._prompt_options = {"tech": "Technical", "ntech": "Non-technical", "swe": "Svenska"}
+        self._model_options = {"api": "GPT-3.5 (API)", "gpt2": "GPT-2 (local)", "t5": "T5 (local)"}
 
     def create_layout(self):
         return dbc.Container(
@@ -24,6 +25,15 @@ class LayoutHandler:
                         ),
                         dbc.Col(
                             children=[
+                                dbc.Row(html.P("Choose model:"), className="mt-1"),
+                                dbc.Row(
+                                    dcc.RadioItems(
+                                        id="model-radio",
+                                        options=self._model_options,
+                                        value="api",
+                                    )
+                                ),
+                                dbc.Row(html.P("")),
                                 dbc.Row(html.P("Choose type of summary:"), className="mt-1"),
                                 dbc.Row(
                                     dcc.RadioItems(
