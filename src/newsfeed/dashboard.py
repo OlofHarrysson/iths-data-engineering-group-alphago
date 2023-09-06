@@ -21,6 +21,11 @@ app.layout = dashboard_layout.LayoutHandler().create_layout()
 
 # server = app.server
 
+path_article_dir = Path(f"data/data_warehouse/{blog}/articles")
+file_list = os.listdir(path_article_dir)
+
+file_path = path_article_dir / file_list[0]
+
 
 @app.callback(
     Output("blog-articles-dropdown", "options"),
@@ -29,6 +34,21 @@ app.layout = dashboard_layout.LayoutHandler().create_layout()
 def get_article(blog):
     path_article_dir = Path(f"data/data_warehouse/{blog}/articles")
     file_list = os.listdir(path_article_dir)
+    articles = []
+
+    for file_name in file_list:
+        file_path = path_article_dir / file_name
+        try:
+            with open(file_path, "r") as f:
+                data = json.load(f)
+                published = data.get("published", "Key 'published' not found in JSON file")
+                articles.append((file_name, published))
+        except json.JSONDecodeError:
+            return "Error decoding JSON"
+
+    articles = sorted(articles, key=lambda x: x[1], reverse=True)[:15]
+    file_list = [article[0] for article in articles]
+
     return file_list
 
 
