@@ -1,5 +1,4 @@
 import argparse
-import shlex  # needed for airflow DAG
 from pathlib import Path
 
 import requests
