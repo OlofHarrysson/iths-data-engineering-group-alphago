@@ -12,7 +12,6 @@ from langchain.prompts import PromptTemplate
 from transformers import AutoTokenizer, pipeline
 
 from newsfeed.datatypes import BlogInfo, BlogSummary
-from newsfeed.download_blogs_from_rss import LINK_TO_XML_FILE
 
 
 def summarize_text(blog_post_path, local_model=None, sum_type="tech"):
@@ -150,7 +149,7 @@ def main(source, local_model=None, sum_type="tech"):
         already_summarized.add(summary_filename)
 
 
-blog_names = list(LINK_TO_XML_FILE)
+blog_names = ["mit", "aws", "openai"]
 
 
 # run python summarize.py --source mit OR aws
