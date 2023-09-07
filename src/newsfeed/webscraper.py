@@ -41,6 +41,7 @@ def main():
 
             soup = BeautifulSoup(response.content, "html.parser")
 
+            
             # find publishing date
             date_tag = soup.find("span", {"class": "f-meta-2"})
 

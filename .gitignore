@@ -5,6 +5,8 @@ data/data_warehouse/*
 !data/data_warehouse/README.md
 logs
 .vscode/*
+dags/hello_world_dag.py
+dags/newsfeed_dag.py
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

@@ -4,6 +4,8 @@ import os
 import tempfile
 from pathlib import Path
 
+import openai
+from dotenv import load_dotenv
 from langchain.chains.combine_documents.stuff import StuffDocumentsChain
 from langchain.chains.llm import LLMChain
 from langchain.chat_models import ChatOpenAI
@@ -11,10 +13,14 @@ from langchain.document_loaders import TextLoader
 from langchain.prompts import PromptTemplate
 from transformers import AutoTokenizer, pipeline
 
+load_dotenv()
+
 from newsfeed.datatypes import BlogInfo, BlogSummary
 
 
 def summarize_text(blog_post_path, local_model=None, sum_type="tech"):
+    api_key = os.getenv("OPENAI_API_KEY")
+    openai.api_key = api_key
     # loading text as langchain document
     loader = TextLoader(blog_post_path)
     blog_post = loader.load()
