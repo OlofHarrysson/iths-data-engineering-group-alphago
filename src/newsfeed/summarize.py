@@ -16,7 +16,6 @@ from transformers import AutoTokenizer, pipeline
 load_dotenv()
 
 from newsfeed.datatypes import BlogInfo, BlogSummary
-from newsfeed.download_blogs_from_rss import LINK_TO_XML_FILE
 
 
 def summarize_text(blog_post_path, local_model=None, sum_type="tech"):
@@ -33,7 +32,7 @@ def summarize_text(blog_post_path, local_model=None, sum_type="tech"):
         checkpoint = "distilgpt2"
         tokenizer = AutoTokenizer.from_pretrained(checkpoint)  # this selects GPT2TokenizerFast
 
-        # max tokens length is 1024
+        # max token length is 1024
         # limit input tokens to allow enough space for generation
         tokens_text = tokenizer.tokenize(blog_post_text)
         tokens_tldr = tokenizer.tokenize("\n\nTL;DR:\n")
@@ -156,7 +155,7 @@ def main(source, local_model=None, sum_type="tech"):
         already_summarized.add(summary_filename)
 
 
-blog_names = list(LINK_TO_XML_FILE)
+blog_names = ["mit", "aws", "openai"]
 
 
 # run python summarize.py --source mit OR aws
