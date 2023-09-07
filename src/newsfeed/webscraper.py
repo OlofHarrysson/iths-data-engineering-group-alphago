@@ -27,7 +27,7 @@ def main():
             article["link"] = urljoin("https://openai.com/blog", a_tag.get("href"))
             article["title"] = h3_tag.text
 
-            sleep(0.5)
+            sleep(0.2)
 
             # Fetch and parse individual artiles
             response = requests.get(article["link"])
