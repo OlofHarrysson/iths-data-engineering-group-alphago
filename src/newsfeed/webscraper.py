@@ -1,4 +1,5 @@
 import json
+from datetime import datetime
 from pathlib import Path
 from time import sleep
 from urllib.parse import urljoin
@@ -38,6 +39,13 @@ def main():
                 continue
 
             soup = BeautifulSoup(response.content, "html.parser")
+
+            date_tag = soup.find("span", {"class": "f-meta-2"})
+
+            if date_tag:
+                datetime_object = datetime.strptime(date_tag.text, "%B %d, %Y")
+                formatted_date_str = datetime_object.strftime("%Y-%m-%d")
+                article["published"] = formatted_date_str
 
             article_content_tag = soup.find("div", {"id": "content"})
 
