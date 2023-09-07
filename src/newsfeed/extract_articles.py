@@ -79,13 +79,6 @@ def parse_args():
     return parser.parse_args()
 
 
-def airflow_dag_argument_extract(arg_str):
-    args = shlex.split(arg_str)
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--blog_name")
-    parsed_args = parser.parse_args(args)
-
-
 if __name__ == "__main__":
     args = parse_args()
     main(blog_name=args.blog_name)
