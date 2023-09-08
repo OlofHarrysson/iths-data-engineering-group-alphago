@@ -130,6 +130,7 @@ def main(source, local_model=None, sum_type="tech"):
     already_summarized = set(os.listdir(path_summary_dir))
 
     file_list = os.listdir(path_article_dir)
+    new_articles = []
 
     for file_name in file_list:
         summary_filename_check = f"Summary_of_{file_name}"
@@ -137,6 +138,9 @@ def main(source, local_model=None, sum_type="tech"):
         if summary_filename_check in already_summarized:
             print(f"Skipping already summarized article: {file_name}")
             continue
+
+        # if new summary is generated, add to list
+        new_articles.append(file_name)
         # file path for the article that's being summarized/looked at
         current_article_path = path_article_dir / file_name
         summary_text = summarize_text(current_article_path, local_model, sum_type)
@@ -153,6 +157,8 @@ def main(source, local_model=None, sum_type="tech"):
         with open(path_summary_dir / summary_filename, "w") as f:
             f.write(blog_summary.json())
         already_summarized.add(summary_filename)
+
+    return new_articles
 
 
 blog_names = ["mit", "aws", "openai"]
