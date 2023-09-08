@@ -31,44 +31,40 @@ def extract_articles_task() -> None:
     extract_articles.main(blog_name="aws")
 
 
-# technical summaries
-@task(task_id="summarize_tech")
-def summarize_tech_task() -> None:
-    summarize.main(source="mit", sum_type="tech")
-    # summarize.main(source="aws", sum_type="tech")
-    summarize.main(source="openai", sum_type="tech")
+sum_types = ["tech", "ntech", "swe"]
 
 
-# non-technical summaries
-@task(task_id="summarize_non_tech")
-def summarize_non_tech_task() -> None:
-    summarize.main(source="mit", sum_type="ntech")
-    # summarize.main(source="aws", sum_type="ntech")
-    summarize.main(source="openai", sum_type="ntech")
+@task(task_id="summarize_mit")
+def summarize_mit_task():
+    new_articles = summarize.main(source="mit")
+    for sum_type in sum_types[1:]:
+        summarize.main(source="mit", sum_type=sum_type)
+
+    return new_articles
 
 
-# swedish summaries
-@task(task_id="summarize_swe")
-def summarize_swe_task() -> None:
-    summarize.main(source="mit", sum_type="swe")
-    # summarize.main(source="aws", sum_type="swe")
-    summarize.main(source="openai", sum_type="swe")
+@task(task_id="summarize_aws")
+def summarize_aws_task():
+    new_articles = summarize.main(source="aws")
+    for sum_type in sum_types[1:]:
+        summarize.main(source="aws", sum_type=sum_type)
+
+    return new_articles
 
 
-# discord bot - only sends tech summaries atm, can fix by adding a new task
+@task(task_id="summarize_openai")
+def summarize_openai_task() -> None:
+    new_articles = summarize.main(source="openai")
+    for sum_type in sum_types[1:]:
+        summarize.main(source="openai", sum_type=sum_type)
+
+    return new_articles
+
+
 @task(task_id="discord_bot")
-def discord_bot_task() -> None:
-    discord_bot.main(
-        source="mit",
-        ix=1,
-        sum_type="tech",
-    )
-    # discord_bot.main(source="aws", ix=1, sum_type="tech",)
-    discord_bot.main(
-        source="openai",
-        ix=1,
-        sum_type="tech",
-    )
+def discord_bot_task(mit_articles) -> None:
+    for sum_type in sum_types:
+        discord_bot.main(source="mit", articles=mit_articles, sum_type=sum_type)
 
 
 @dag(
@@ -80,14 +76,26 @@ def discord_bot_task() -> None:
 def test_pipeline() -> None:
     # hello_task() >> download_blogs_from_rss_task()
     # download_blogs_from_rss_task()
+    task4 = summarize_mit_task()
+    # task5 = summarize_aws_task()
+    # task6 = summarize_openai_task()
+    # task7 = discord_bot_task(task4, task5, task6)
+    task7 = discord_bot_task(task4)
     (
         download_blogs_from_rss_task()
         >> extract_articles_task()
         >> webscraper_task()
-        >> summarize_tech_task()
-        >> summarize_non_tech_task()
-        >> summarize_swe_task()
-        >> discord_bot_task()
+        >> task4
+        # >> task5
+        # >> task6
+        >> task7
+        # download_blogs_from_rss_task()
+        # >> extract_articles_task()
+        # >> webscraper_task()
+        # >> summarize_tech_task()
+        # >> summarize_non_tech_task()
+        # >> summarize_swe_task()
+        # >> discord_bot_task()
     )
 
 
