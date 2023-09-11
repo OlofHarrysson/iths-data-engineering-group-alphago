@@ -1,4 +1,5 @@
 import json
+from datetime import datetime
 from pathlib import Path
 from time import sleep
 from urllib.parse import urljoin
@@ -19,6 +20,7 @@ def main():
         print(f"Failed to get the main page, status code: {response.status_code}")
         exit()
 
+    # find links to articles
     soup = BeautifulSoup(response.content, "html.parser")
     for a_tag in soup.find_all("a"):
         h3_tag = a_tag.find("h3")
@@ -39,6 +41,16 @@ def main():
 
             soup = BeautifulSoup(response.content, "html.parser")
 
+            
+            # find publishing date
+            date_tag = soup.find("span", {"class": "f-meta-2"})
+
+            if date_tag:
+                datetime_object = datetime.strptime(date_tag.text, "%B %d, %Y")
+                formatted_date_str = datetime_object.strftime("%Y-%m-%d")
+                article["published"] = formatted_date_str
+
+            # find article content
             article_content_tag = soup.find("div", {"id": "content"})
 
             if article_content_tag:
@@ -48,6 +60,7 @@ def main():
 
                 sanitized_filename = sanitize_filename(f"{article['title']}.json")
 
+                # save to jsonfile
                 json_file_path = data_warehouse_dir / sanitized_filename
                 with json_file_path.open("w") as f:
                     json.dump(article, f, indent=2)
