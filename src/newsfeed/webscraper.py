@@ -60,6 +60,7 @@ def main():
                 article["unique_id"] = create_uuid_from_string(article["title"])
 
                 sanitized_filename = sanitize_filename(f"{article['title']}.json")
+                sanitized_filename = sanitized_filename.replace(" ", "_")
 
                 # save to jsonfile
                 json_file_path = data_warehouse_dir / sanitized_filename
