@@ -41,7 +41,6 @@ def main():
 
             soup = BeautifulSoup(response.content, "html.parser")
 
-            
             # find publishing date
             date_tag = soup.find("span", {"class": "f-meta-2"})
 
@@ -54,7 +53,9 @@ def main():
             article_content_tag = soup.find("div", {"id": "content"})
 
             if article_content_tag:
-                article["blog_text"] = article_content_tag.text
+                blog_text_words = article_content_tag.text.split()
+                blog_text = " ".join(blog_text_words[:4000])
+                article["blog_text"] = blog_text
                 article["description"] = ""
                 article["unique_id"] = create_uuid_from_string(article["title"])
 

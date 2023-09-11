@@ -37,6 +37,8 @@ def extract_articles_from_xml(parsed_xml):
         raw_blog_text = item.find("content:encoded").text
         soup = BeautifulSoup(raw_blog_text, "html.parser")
         blog_text = soup.get_text()
+        blog_text_words = blog_text.split()
+        blog_text = " ".join(blog_text_words[:4000])
         title = item.title.text
         unique_id = create_uuid_from_string(title)
         article_info = BlogInfo(
