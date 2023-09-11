@@ -43,7 +43,7 @@ def send_to_webhook(info, summary, sum_type):
     loop.close()
 
 
-def main(source, ix=None, local_model=None, sum_type="tech"):
+def main(source, articles=None, local_model=None, sum_type="tech"):
     if not source:
         print("Please use --source argument to specify the blog you want articles from")
         return
@@ -51,13 +51,12 @@ def main(source, ix=None, local_model=None, sum_type="tech"):
     path_article_dir = Path(f"data/data_warehouse/{source}/articles")
     file_list = os.listdir(path_article_dir)
 
-    if ix == None:
-        print(f"Please use --ix argument to specify the index an article from {source}:\n")
+    if articles == None:
+        print(f"Please use --articles argument to specify a list of articles from {source}:\n")
         for i, j in enumerate(file_list):
             print(i, j)
         return
 
-    article = file_list[ix]
     path_summary_dir = Path(f"data/data_warehouse/{source}/summarized_articles")
 
     if local_model:
@@ -65,20 +64,21 @@ def main(source, ix=None, local_model=None, sum_type="tech"):
     else:
         path_summary_dir = path_summary_dir / sum_type
 
-    path_summary_file = path_summary_dir / f"Summary_of_{article}"
+    for article in articles:
+        path_summary_file = path_summary_dir / f"Summary_of_{article}"
 
-    if path_summary_file.exists():
-        with open(path_summary_file, "r") as json_file:
-            summary = json.load(json_file)["text"]
-    else:
-        summary = summarize.summarize_text(
-            path_article_dir / article, local_model=local_model, sum_type=sum_type
-        )
+        if path_summary_file.exists():
+            with open(path_summary_file, "r") as json_file:
+                summary = json.load(json_file)["text"]
+        else:
+            summary = summarize.summarize_text(
+                path_article_dir / article, local_model=local_model, sum_type=sum_type
+            )
 
-    with open(path_article_dir / article, "r") as json_file:
-        article_info = json.load(json_file)
+        with open(path_article_dir / article, "r") as json_file:
+            article_info = json.load(json_file)
 
-    send_to_webhook(article_info, summary, sum_type)
+        send_to_webhook(article_info, summary, sum_type)
 
 
 blog_names = list(LINK_TO_XML_FILE)
@@ -89,9 +89,9 @@ blog_names = list(LINK_TO_XML_FILE)
 def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "--ix",
-        type=int,
-        help=f"Run without --ix argument to see article indices for chosen blog",
+        "--articles",
+        type=list,
+        help=f"Run without --articles argument to see list of articles",
     )
     parser.add_argument(
         "--source",
@@ -119,4 +119,4 @@ def parse_args():
 
 if __name__ == "__main__":
     args = parse_args()
-    main(source=args.source, ix=args.ix, local_model=args.model, sum_type=args.stype)
+    main(source=args.source, articles=args.articles, local_model=args.model, sum_type=args.stype)
