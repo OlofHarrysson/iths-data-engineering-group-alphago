@@ -16,6 +16,7 @@ from transformers import AutoTokenizer, pipeline
 load_dotenv()
 
 from newsfeed.datatypes import BlogInfo, BlogSummary
+from newsfeed.extract_articles import sanitize_filename
 
 
 def summarize_text(blog_post_path, local_model=None, sum_type="tech"):
@@ -153,6 +154,7 @@ def main(source, local_model=None, sum_type="tech"):
         )
         # gets the name of the article
         summary_filename = blog_summary.get_filename()
+        summary_filename = sanitize_filename(summary_filename)
 
         with open(path_summary_dir / summary_filename, "w") as f:
             f.write(blog_summary.json())
