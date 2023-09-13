@@ -24,6 +24,7 @@ app.layout = dashboard_layout.LayoutHandler().create_layout()
 
 @app.callback(
     Output("blog-articles-dropdown", "options"),
+    Output("blog-articles-dropdown", "value"),
     Input("blog-radio", "value"),
 )
 def get_article(blog):
@@ -43,9 +44,10 @@ def get_article(blog):
             return "Error decoding JSON"
 
     articles = sorted(articles, key=lambda x: x[1], reverse=True)[:15]
-    file_list = [article[0] for article in articles]
+    file_list = [article[1] + ": " + article[0] for article in articles]
 
-    return file_list
+    # most recent article set as default value
+    return file_list, file_list[0]
 
 
 @app.callback(
