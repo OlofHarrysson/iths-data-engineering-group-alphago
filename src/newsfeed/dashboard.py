@@ -8,6 +8,7 @@ from dash import dcc, html
 from dash.dependencies import Input, Output
 
 from newsfeed import dashboard_layout, summarize
+from newsfeed.extract_articles import sanitize_filename
 
 app = dash.Dash(
     __name__,
@@ -24,6 +25,7 @@ app.layout = dashboard_layout.LayoutHandler().create_layout()
 
 @app.callback(
     Output("blog-articles-dropdown", "options"),
+    Output("blog-articles-dropdown", "value"),
     Input("blog-radio", "value"),
 )
 def get_article(blog):
@@ -43,9 +45,10 @@ def get_article(blog):
             return "Error decoding JSON"
 
     articles = sorted(articles, key=lambda x: x[1], reverse=True)[:15]
-    file_list = [article[0] for article in articles]
+    file_list = [article[1] + ": " + article[0] for article in articles]
 
-    return file_list
+    # most recent article set as default value
+    return file_list, file_list[0]
 
 
 @app.callback(
@@ -60,7 +63,9 @@ def summarize_article(blog, article, sum_type, model):
     if not article:
         return "No article specified.", ""
 
-    article = f'{article.replace(" ", "_")}.json'  # get file name from title
+    # get file name from title
+    article = article[12:].replace(" ", "_")
+    article = f"{sanitize_filename(article)}.json"
 
     if model == "api":
         path_summary_dir = Path(f"data/data_warehouse/{blog}/summarized_articles/{sum_type}")
