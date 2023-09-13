@@ -81,7 +81,7 @@ def main(source, articles=None, local_model=None, sum_type="tech"):
         send_to_webhook(article_info, summary, sum_type)
 
 
-blog_names = list(LINK_TO_XML_FILE)
+blog_names = ["mit", "aws", "openai"]
 
 # make parse_args util function?
 

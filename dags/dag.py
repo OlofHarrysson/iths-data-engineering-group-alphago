@@ -62,9 +62,11 @@ def summarize_openai_task() -> None:
 
 
 @task(task_id="discord_bot")
-def discord_bot_task(mit_articles) -> None:
+def discord_bot_task(mit_articles, aws_articles, openai_articles) -> None:
     for sum_type in sum_types:
         discord_bot.main(source="mit", articles=mit_articles, sum_type=sum_type)
+        discord_bot.main(source="aws", articles=aws_articles, sum_type=sum_type)
+        discord_bot.main(source="openai", articles=openai_articles, sum_type=sum_type)
 
 
 @dag(
@@ -74,28 +76,19 @@ def discord_bot_task(mit_articles) -> None:
     catchup=False,
 )
 def test_pipeline() -> None:
-    # hello_task() >> download_blogs_from_rss_task()
-    # download_blogs_from_rss_task()
-    task4 = summarize_mit_task()
-    # task5 = summarize_aws_task()
-    # task6 = summarize_openai_task()
+    mit = summarize_mit_task()
+    aws = summarize_aws_task()
+    openai = summarize_openai_task()
     # task7 = discord_bot_task(task4, task5, task6)
-    task7 = discord_bot_task(task4)
+    # task7 = discord_bot_task(task4)
     (
         download_blogs_from_rss_task()
         >> extract_articles_task()
         >> webscraper_task()
-        >> task4
-        # >> task5
-        # >> task6
-        >> task7
-        # download_blogs_from_rss_task()
-        # >> extract_articles_task()
-        # >> webscraper_task()
-        # >> summarize_tech_task()
-        # >> summarize_non_tech_task()
-        # >> summarize_swe_task()
-        # >> discord_bot_task()
+        >> mit
+        >> aws
+        >> openai
+        >> discord_bot_task(mit, aws, openai)
     )
 
 

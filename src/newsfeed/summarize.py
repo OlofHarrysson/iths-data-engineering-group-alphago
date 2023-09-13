@@ -36,7 +36,7 @@ def summarize_text(blog_post_path, local_model=None, sum_type="tech"):
         # limit input tokens to allow enough space for generation
         tokens_text = tokenizer.tokenize(blog_post_text)
         tokens_tldr = tokenizer.tokenize("\n\nTL;DR:\n")
-        tokens = tokens_text[:512] + tokens_tldr
+        tokens = tokens_text[:800] + tokens_tldr
 
         # convert back to string for pipeline
         query = tokenizer.convert_tokens_to_string(tokens)
